@@ -37,6 +37,12 @@
         <javac srcdir="src" classpath="${josm}" debug="true" target="${ant.build.javac.target}" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <fileset dir="lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
         </javac>
     </target>
     <target name="dist" depends="compile,revision">
@@ -47,6 +53,7 @@
             <fileset dir="data"/>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <zipfileset src="lib/sqlite-jdbc-3.7.2.jar" includes="**/*"/>
             <manifest>
                 <attribute name="Author" value="${plugin.author}"/>
                 <attribute name="Plugin-Class" value="${plugin.class}"/>

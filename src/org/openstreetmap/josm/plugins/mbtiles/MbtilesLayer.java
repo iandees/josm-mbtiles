@@ -2,65 +2,128 @@ package org.openstreetmap.josm.plugins.mbtiles;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.data.Bounds;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryBounds;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryType;
-import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.layer.TMSLayer;
+import org.sqlite.SQLiteConfig;
 
 /**
- * Class that displays a slippy map layer. Adapted from SlippyMap plugin for mbtiles use.
+ * Class that displays a slippy map layer. Adapted from SlippyMap plugin for
+ * mbtiles use.
  *
  * @author Ian Dees <ian.dees@gmail.com>
  *
  */
 public class MbtilesLayer extends TMSLayer {
-    /**
-     * Actual zoom lvl. Initial zoom lvl is set to
-     * {@link FieldPapersPreferences#getMinZoomLvl()}.
-     */
-    private int currentZoomLevel;
 
-    private Bounds printBounds;
-    private String fieldPapersId;
+    private final Connection connection;
 
-    public MbtilesLayer(String id, String tileUrlTemplate, Bounds b, int minz, int maxz) {
-        super(buildImageryInfo(id, tileUrlTemplate, b, minz, maxz));
-        this.fieldPapersId = id;
-
-        this.printBounds = b;
-        this.currentZoomLevel = minz;
+    public MbtilesLayer(File mbtilesFile) throws MbtilesException {
+        super(buildImageryInfo(mbtilesFile));
+        connection = obtainSqliteDbConnection(mbtilesFile);
+        super.tileLoader = new MbtilesTileLoader(this, connection);
     }
 
-    private static ImageryInfo buildImageryInfo(String id, String tileUrlTemplate, Bounds b, int minz, int maxz) {
-        ImageryInfo info = new ImageryInfo(tr("Field Papers: {0}", id), tileUrlTemplate);
-        info.setBounds(new ImageryBounds(b.encodeAsString(","), ","));
+    private static Connection obtainSqliteDbConnection(File dbFile) throws MbtilesException {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e1) {
+            throw new MbtilesException("Could not load sqlite driver.", e1);
+        }
+
+        Connection connection = null;
+        try {
+            SQLiteConfig config = new SQLiteConfig();
+            config.setReadOnly(true);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath(), config.toProperties());
+            return connection;
+        } catch (SQLException e) {
+            throw new MbtilesException("Could not connect to sqlite database.", e);
+        }
+    }
+
+    private static ImageryInfo buildImageryInfo(File mbtilesFile) throws MbtilesException {
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e1) {
+            throw new MbtilesException("Could not load sqlite driver.", e1);
+        }
+
+        Connection connection = null;
+
+        String version = null;
+        String name = null;
+        ImageryBounds bounds = null;
+        int maxz = 0;
+        int minz = 0;
+
+        try {
+            SQLiteConfig config = new SQLiteConfig();
+            config.setReadOnly(true);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + mbtilesFile.getAbsolutePath(), config.toProperties());
+
+            PreparedStatement statement = connection.prepareStatement("SELECT name,value FROM metadata");
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                String metaName = rs.getString("name");
+                if ("name".equals(metaName)) {
+                    name = rs.getString("value");
+                } else if ("bounds".equals(metaName)) {
+                    bounds = new ImageryBounds(rs.getString("value"), ",");
+                } else if ("minzoom".equals(metaName)) {
+                    minz = rs.getInt("value");
+                } else if ("maxzoom".equals(metaName)) {
+                    maxz = rs.getInt("value");
+                } else if ("version".equals(metaName)) {
+                    version = rs.getString("value");
+                }
+            }
+        } catch (SQLException e) {
+            throw new MbtilesException(tr("This doesn't appear to be a valid mbtiles database."), e);
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                // connection close failed.
+                e.printStackTrace();
+            }
+        }
+
+        if (name == null || !version.equals("1.0.0")) {
+            throw new MbtilesException(tr("This doesn't appear to be a valid mbtiles database."));
+        }
+
+        ImageryInfo info = new ImageryInfo(tr("MBTiles: {0}", name));
+        info.setBounds(bounds);
         info.setDefaultMaxZoom(maxz);
         info.setDefaultMinZoom(minz);
-        info.setIcon("fieldpapers");
+        info.setIcon("mbtiles");
         info.setImageryType(ImageryType.TMS);
+        // Hack around the TMSLayer's URL check
+        info.setUrl("tms:http://example.com");
         return info;
     }
 
     @Override
-    public Object getInfoComponent() {
-        return getToolTipText();
-    }
+    public void destroy() {
+        super.destroy();
 
-    @Override
-    public String getToolTipText() {
-        return tr("Field Papers layer ({0}) in zoom {1}", this.getFieldPapersId(), currentZoomLevel);
-    }
-
-    @Override
-    public void visitBoundingBox(BoundingXYVisitor v) {
-        if (printBounds != null)
-            v.visit(printBounds);
-    }
-
-    public String getFieldPapersId() {
-        return fieldPapersId;
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
