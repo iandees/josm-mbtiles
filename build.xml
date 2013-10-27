@@ -28,13 +28,14 @@
     <property name="plugin.dist.dir" value="../josm/dist"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="ant.build.javac.target" value="1.5"/>
+    <property name="ant.build.javac.target" value="1.6"/>
+    <property name="ant.build.javac.source" value="1.6"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" classpath="${josm}" debug="true" target="${ant.build.javac.target}" destdir="${plugin.build.dir}">
+        <javac srcdir="src" classpath="${josm}" debug="true" source="${ant.build.javac.source}" target="${ant.build.javac.target}" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
             <classpath>
