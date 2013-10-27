@@ -79,7 +79,11 @@ public class MbtilesLayer extends TMSLayer {
                 if ("name".equals(metaName)) {
                     name = rs.getString("value");
                 } else if ("bounds".equals(metaName)) {
-                    bounds = new ImageryBounds(rs.getString("value"), ",");
+                    // Rearrange the bbox string because it's in Left,Bottom,Right,Top order and
+                    // ImageryBounds is expecting Min/Max order.
+                    String[] parts = rs.getString("value").split(",");
+                    String rearrangedBbox = parts[1] + "," + parts[0] + "," + parts[3] + "," + parts[2];
+                    bounds = new ImageryBounds(rearrangedBbox, ",");
                 } else if ("minzoom".equals(metaName)) {
                     minz = rs.getInt("value");
                 } else if ("maxzoom".equals(metaName)) {
