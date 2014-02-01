@@ -92,6 +92,15 @@ public class MbtilesLayer extends TMSLayer {
                     version = rs.getString("value");
                 }
             }
+
+            if (maxz == 0 || minz == 0) {
+                statement = connection.prepareStatement("SELECT max(zoom_level) AS max,min(zoom_level) AS min FROM tiles");
+
+                rs = statement.executeQuery();
+                rs.next();
+                maxz = rs.getInt("max");
+                minz = rs.getInt("min");
+            }
         } catch (SQLException e) {
             throw new MbtilesException(tr("This doesn't appear to be a valid mbtiles database."), e);
         } finally {
