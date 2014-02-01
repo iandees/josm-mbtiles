@@ -104,8 +104,8 @@ public class MbtilesLayer extends TMSLayer {
             }
         }
 
-        if (name == null || !version.equals("1.0.0")) {
-            throw new MbtilesException(tr("This doesn't appear to be a valid mbtiles database."));
+        if (name == null || maxz == 0 || minz == 0 || bounds == null) {
+            throw new MbtilesException(tr("This mbtiles file doesn't have the required metadata for JOSM."));
         }
 
         ImageryInfo info = new ImageryInfo(tr("MBTiles: {0}", name));

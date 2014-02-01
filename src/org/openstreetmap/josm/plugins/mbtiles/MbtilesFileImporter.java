@@ -24,6 +24,7 @@ public class MbtilesFileImporter extends FileImporter {
             MbtilesLayer layer = new MbtilesLayer(file);
             Main.main.addLayer(layer);
         } catch (MbtilesException e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(Main.main.panel, tr("Could not load that mbtiles file: {0}", e.getMessage()));
         }
     }
