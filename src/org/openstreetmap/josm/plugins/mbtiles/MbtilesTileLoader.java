@@ -6,13 +6,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
+import org.openstreetmap.gui.jmapviewer.FeatureAdapter;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 
 public class MbtilesTileLoader extends OsmTileLoader {
+    private static final Logger LOG = FeatureAdapter.getLogger(MbtilesTileLoader.class.getCanonicalName());
 
     private final Connection connection;
 
@@ -25,7 +28,8 @@ public class MbtilesTileLoader extends OsmTileLoader {
     public TileJob createTileLoaderJob(final Tile tile) {
         return new TileJob() {
 
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     tile.initLoading();
                     Statement stmt = connection.createStatement();
@@ -35,26 +39,41 @@ public class MbtilesTileLoader extends OsmTileLoader {
                     ResultSet rs = stmt.executeQuery(sql);
 
                     if(rs.next()) {
+                    	LOG.fine("Got a row");
                         tile.loadImage(new ByteArrayInputStream(rs.getBytes(1)));
-                        tile.finishLoading();
+                        tile.setLoaded(true);
                         listener.tileLoadingFinished(tile, true);
                     } else {
-                        tile.finishLoading();
+                    	LOG.fine("No row found");
+                    	tile.setError("No tile found");
                         listener.tileLoadingFinished(tile, false);
                     }
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                	LOG.throwing(this.getClass().getName(), "createTileLoaderJob", e);
+                    tile.setError(e.getMessage());
                     listener.tileLoadingFinished(tile, false);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	LOG.throwing(this.getClass().getName(), "createTileLoaderJob", e);
+                    tile.setError(e.getMessage());
                     listener.tileLoadingFinished(tile, false);
                 }
             }
 
-            public Tile getTile() {
+            @Override
+			public Tile getTile() {
                 return tile;
             }
+
+			@Override
+			public void submit() {
+				this.submit(false);
+			}
+
+			@Override
+			public void submit(boolean force) {
+                run();
+			}
         };
     }
 

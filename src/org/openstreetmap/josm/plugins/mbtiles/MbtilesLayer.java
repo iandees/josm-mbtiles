@@ -9,10 +9,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryBounds;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryType;
-import org.openstreetmap.josm.gui.layer.TMSLayer;
+import org.openstreetmap.josm.data.imagery.TileLoaderFactory;
+import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.sqlite.SQLiteConfig;
 
 /**
@@ -22,7 +24,7 @@ import org.sqlite.SQLiteConfig;
  * @author Ian Dees <ian.dees@gmail.com>
  *
  */
-public class MbtilesLayer extends TMSLayer {
+public class MbtilesLayer extends AbstractTileSourceLayer {
 
     private final Connection connection;
 
@@ -60,10 +62,9 @@ public class MbtilesLayer extends TMSLayer {
 
         Connection connection = null;
 
-        String version = null;
-        String name = null;
+        String name = mbtilesFile.getName();
         ImageryBounds bounds = null;
-        int maxz = 0;
+        int maxz = 18;
         int minz = 0;
 
         try {
@@ -88,8 +89,6 @@ public class MbtilesLayer extends TMSLayer {
                     minz = rs.getInt("value");
                 } else if ("maxzoom".equals(metaName)) {
                     maxz = rs.getInt("value");
-                } else if ("version".equals(metaName)) {
-                    version = rs.getString("value");
                 }
             }
 
@@ -113,12 +112,10 @@ public class MbtilesLayer extends TMSLayer {
             }
         }
 
-        if (name == null || maxz == 0 || minz == 0 || bounds == null) {
-            throw new MbtilesException(tr("This mbtiles file doesn't have the required metadata for JOSM."));
-        }
-
         ImageryInfo info = new ImageryInfo(tr("MBTiles: {0}", name));
-        info.setBounds(bounds);
+        if (bounds != null) {
+        	info.setBounds(bounds);
+        }
         info.setDefaultMaxZoom(maxz);
         info.setDefaultMinZoom(minz);
         info.setIcon("mbtiles");
@@ -138,5 +135,15 @@ public class MbtilesLayer extends TMSLayer {
             e.printStackTrace();
         }
     }
+
+	@Override
+	protected TileLoaderFactory getTileLoaderFactory() {
+		return new MbtilesTileLoaderFactory(this.connection);
+	}
+
+	@Override
+	protected AbstractTMSTileSource getTileSource(ImageryInfo info) throws IllegalArgumentException {
+		return new MbtilesTileSource(info);
+	}
 
 }

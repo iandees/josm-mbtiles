@@ -1,7 +1,5 @@
 package org.openstreetmap.josm.plugins.mbtiles;
 
-import javax.swing.JMenu;
-
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -14,8 +12,6 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class MbtilesPlugin extends Plugin
 {
-    static JMenu walkingPapersMenu;
-
     public MbtilesPlugin(PluginInformation info)
     {
         super(info);

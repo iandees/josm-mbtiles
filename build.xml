@@ -24,7 +24,7 @@
     <property name="plugin.icon" value="images/preferences/mbtiles.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Mbtiles"/>
 
-    <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="josm" location="../josm/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../josm/dist"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
