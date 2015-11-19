@@ -16,7 +16,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Changed the constructor signature of the plugin main class"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4549"/>
+    <property name="plugin.main.version" value="8969"/>
 
     <property name="plugin.author" value="Ian Dees"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.mbtiles.MbtilesPlugin"/>
