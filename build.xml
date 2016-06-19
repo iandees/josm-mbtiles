@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** See README.template
-**
-** Usage
-** =====
-** Call "ant help" to get possible build targets.
-**
--->
 <project name="mbtiles" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Changed the constructor signature of the plugin main class"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="8969"/>
+    <property name="plugin.main.version" value="10407"/>
 
     <property name="plugin.author" value="Ian Dees"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.mbtiles.MbtilesPlugin"/>
@@ -28,14 +16,15 @@
     <property name="plugin.dist.dir" value="../josm/dist"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="ant.build.javac.target" value="1.6"/>
-    <property name="ant.build.javac.source" value="1.6"/>
+    <property name="ant.build.javac.target" value="1.7"/>
+    <property name="ant.build.javac.source" value="1.7"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" classpath="${josm}" debug="true" source="${ant.build.javac.source}" target="${ant.build.javac.target}" destdir="${plugin.build.dir}">
+        <javac srcdir="src" classpath="${josm}" debug="true" source="${ant.build.javac.source}" target="${ant.build.javac.target}" destdir="${plugin.build.dir}"
+        	includeantruntime="false">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
             <classpath>
@@ -54,7 +43,7 @@
             <fileset dir="data"/>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <zipfileset src="lib/sqlite-jdbc-3.7.2.jar" includes="**/*"/>
+            <zipfileset src="lib/sqlite-jdbc-3.8.11.2.jar" includes="**/*"/>
             <manifest>
                 <attribute name="Author" value="${plugin.author}"/>
                 <attribute name="Plugin-Class" value="${plugin.class}"/>

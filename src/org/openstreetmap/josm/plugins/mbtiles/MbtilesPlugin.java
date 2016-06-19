@@ -15,7 +15,7 @@ public class MbtilesPlugin extends Plugin
     public MbtilesPlugin(PluginInformation info)
     {
         super(info);
-        ExtensionFileFilter.importers.add(new MbtilesFileImporter());
+        ExtensionFileFilter.addImporter(new MbtilesFileImporter());
         ExtensionFileFilter.updateAllFormatsImporter();
     }
 }

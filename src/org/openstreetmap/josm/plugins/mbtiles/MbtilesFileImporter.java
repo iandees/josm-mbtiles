@@ -14,6 +14,9 @@ import org.openstreetmap.josm.io.FileImporter;
 
 public class MbtilesFileImporter extends FileImporter {
 
+    /**
+     * Constructs a new {@code MbtilesFileImporter}.
+     */
     public MbtilesFileImporter() {
         super(new ExtensionFileFilter("mbtiles", "mbtiles", tr("MBTiles tilesets") + " (*.mbtiles)"));
     }
@@ -22,11 +25,10 @@ public class MbtilesFileImporter extends FileImporter {
     public void importData(File file, ProgressMonitor progressMonitor) throws IOException {
         try {
             MbtilesLayer layer = new MbtilesLayer(file);
-            Main.main.addLayer(layer);
+            Main.getLayerManager().addLayer(layer);
         } catch (MbtilesException e) {
-            e.printStackTrace();
+            Main.error(e);
             JOptionPane.showMessageDialog(Main.panel, tr("Could not load that mbtiles file: {0}", e.getMessage()));
         }
     }
-
 }
