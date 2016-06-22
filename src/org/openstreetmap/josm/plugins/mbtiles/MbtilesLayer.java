@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.TMSTileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryBounds;
@@ -143,7 +144,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
     }
 
     @Override
-    protected AbstractTMSTileSource getTileSource(ImageryInfo info) throws IllegalArgumentException {
-        return new MbtilesTileSource(info);
+    protected AbstractTMSTileSource getTileSource(ImageryInfo info) {
+        return new TMSTileSource(info);
     }
 }
