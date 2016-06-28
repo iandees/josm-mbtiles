@@ -29,7 +29,7 @@ public class MbtilesTileLoader extends OsmTileLoader {
         return new TileJob() {
 
             @Override
-			public void run() {
+            public void run() {
                 try {
                     tile.initLoading();
                     Statement stmt = connection.createStatement();
@@ -39,41 +39,41 @@ public class MbtilesTileLoader extends OsmTileLoader {
                     ResultSet rs = stmt.executeQuery(sql);
 
                     if(rs.next()) {
-                    	LOG.fine("Got a row");
+                        LOG.fine("Got a row");
                         tile.loadImage(new ByteArrayInputStream(rs.getBytes(1)));
                         tile.setLoaded(true);
                         listener.tileLoadingFinished(tile, true);
                     } else {
-                    	LOG.fine("No row found");
-                    	tile.setError("No tile found");
+                        LOG.fine("No row found");
+                        tile.setError("No tile found");
                         listener.tileLoadingFinished(tile, false);
                     }
                     rs.close();
                 } catch (SQLException e) {
-                	LOG.throwing(this.getClass().getName(), "createTileLoaderJob", e);
+                    LOG.throwing(this.getClass().getName(), "createTileLoaderJob", e);
                     tile.setError(e.getMessage());
                     listener.tileLoadingFinished(tile, false);
                 } catch (IOException e) {
-                	LOG.throwing(this.getClass().getName(), "createTileLoaderJob", e);
+                    LOG.throwing(this.getClass().getName(), "createTileLoaderJob", e);
                     tile.setError(e.getMessage());
                     listener.tileLoadingFinished(tile, false);
                 }
             }
 
             @Override
-			public Tile getTile() {
+            public Tile getTile() {
                 return tile;
             }
 
-			@Override
-			public void submit() {
-				this.submit(false);
-			}
+            @Override
+            public void submit() {
+                this.submit(false);
+            }
 
-			@Override
-			public void submit(boolean force) {
+            @Override
+            public void submit(boolean force) {
                 run();
-			}
+            }
         };
     }
 

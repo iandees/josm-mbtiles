@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.TMSTileSource;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryBounds;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryType;
@@ -108,13 +110,13 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
                     connection.close();
             } catch (SQLException e) {
                 // connection close failed.
-                e.printStackTrace();
+                Main.error(e);
             }
         }
 
         ImageryInfo info = new ImageryInfo(tr("MBTiles: {0}", name));
         if (bounds != null) {
-        	info.setBounds(bounds);
+            info.setBounds(bounds);
         }
         info.setDefaultMaxZoom(maxz);
         info.setDefaultMinZoom(minz);
@@ -132,18 +134,17 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
         try {
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Main.error(e);
         }
     }
 
-	@Override
-	protected TileLoaderFactory getTileLoaderFactory() {
-		return new MbtilesTileLoaderFactory(this.connection);
-	}
+    @Override
+    protected TileLoaderFactory getTileLoaderFactory() {
+        return new MbtilesTileLoaderFactory(this.connection);
+    }
 
-	@Override
-	protected AbstractTMSTileSource getTileSource(ImageryInfo info) throws IllegalArgumentException {
-		return new MbtilesTileSource(info);
-	}
-
+    @Override
+    protected AbstractTMSTileSource getTileSource(ImageryInfo info) {
+        return new TMSTileSource(info);
+    }
 }
