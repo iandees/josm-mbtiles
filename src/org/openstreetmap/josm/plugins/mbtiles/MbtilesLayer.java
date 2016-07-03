@@ -67,7 +67,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
         String name = mbtilesFile.getName();
         ImageryBounds bounds = null;
         int maxz = 18;
-        int minz = 0;
+        int minz = -1;
 
         try {
             SQLiteConfig config = new SQLiteConfig();
@@ -94,7 +94,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
                 }
             }
 
-            if (maxz == 0 || minz == 0) {
+            if (maxz == 0 || minz == -1) {
                 statement = connection.prepareStatement("SELECT max(zoom_level) AS max,min(zoom_level) AS min FROM tiles");
 
                 rs = statement.executeQuery();
