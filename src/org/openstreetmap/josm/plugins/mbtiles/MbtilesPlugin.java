@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.mbtiles;
 
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -17,5 +18,10 @@ public class MbtilesPlugin extends Plugin
         super(info);
         ExtensionFileFilter.addImporter(new MbtilesFileImporter());
         ExtensionFileFilter.updateAllFormatsImporter();
+    }
+    
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+      return new CacheExportPanel();
     }
 }
