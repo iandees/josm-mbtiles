@@ -39,9 +39,6 @@
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <zipfileset src="lib/sqlite-jdbc-3.8.11.2.jar" includes="**/*"/>
             <manifest>
