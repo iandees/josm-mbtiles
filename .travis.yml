@@ -1,7 +1,6 @@
 language: java
 jdk:
-- oraclejdk7
-- openjdk6
+- oraclejdk8
 install:
   - "curl --silent --output josm-custom.jar https://josm.openstreetmap.de/josm-tested.jar"
 script:
