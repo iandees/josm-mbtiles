@@ -1,0 +1,16 @@
+language: java
+jdk:
+- oraclejdk7
+- openjdk6
+install:
+  - "curl --silent --output josm-custom.jar https://josm.openstreetmap.de/josm-tested.jar"
+script:
+  - "ant dist"
+deploy:
+  provider: releases
+  api_key:
+    secure: SVkkBT/z5pXY5ooK8k15AcmgQucNGnS2LNFswKJdwGMCdEaI14BY4i/XL7MIOzBA6YRBNt3yMlqSlAup7u1kl3m/ZqaCm0AEjX99w9Xp6d3orb1ymYkCMPhzdrIQyDj4XJAri6TCpxnGIQ773oxSQx7hzu3AW865lqW1+AryI40=
+  file: "dist/mbtiles.jar"
+  on:
+    tags: true
+    repo: iandees/josm-mbtiles
