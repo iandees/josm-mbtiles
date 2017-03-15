@@ -126,7 +126,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
     }
 
     @Override
-    protected AbstractTMSTileSource getTileSource(ImageryInfo info) {
+    protected AbstractTMSTileSource getTileSource() {
         return new TMSTileSource(info);
     }
 }
