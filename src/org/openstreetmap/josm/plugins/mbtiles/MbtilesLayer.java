@@ -32,26 +32,8 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
 
     public MbtilesLayer(File mbtilesFile) throws MbtilesException {
         super(buildImageryInfo(mbtilesFile));
-        connection = obtainSqliteDbConnection(mbtilesFile);
+        connection = MbTilesUtils.obtainSqliteDbConnection(mbtilesFile, true);
         super.tileLoader = new MbtilesTileLoader(this, connection);
-    }
-
-    private static Connection obtainSqliteDbConnection(File dbFile) throws MbtilesException {
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e1) {
-            throw new MbtilesException("Could not load sqlite driver.", e1);
-        }
-
-        Connection connection = null;
-        try {
-            SQLiteConfig config = new SQLiteConfig();
-            config.setReadOnly(true);
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath(), config.toProperties());
-            return connection;
-        } catch (SQLException e) {
-            throw new MbtilesException("Could not connect to sqlite database.", e);
-        }
     }
 
     private static ImageryInfo buildImageryInfo(File mbtilesFile) throws MbtilesException {
