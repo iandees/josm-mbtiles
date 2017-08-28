@@ -2,7 +2,7 @@ language: java
 jdk:
 - oraclejdk8
 install:
-  - "curl --silent --output josm-custom.jar https://josm.openstreetmap.de/josm-tested.jar"
+  - "curl --silent --output josm-custom.jar https://josm.openstreetmap.de/josm-latest.jar"
 script:
   - "ant dist"
 deploy:
