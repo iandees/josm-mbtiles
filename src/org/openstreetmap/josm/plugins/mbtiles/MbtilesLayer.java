@@ -8,15 +8,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.TMSTileSource;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryBounds;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.data.imagery.TileLoaderFactory;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
+import org.openstreetmap.josm.tools.Logging;
 import org.sqlite.SQLiteConfig;
 
 /**
@@ -92,7 +93,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
                     connection.close();
             } catch (SQLException e) {
                 // connection close failed.
-                Main.error(e);
+                Logging.error(e);
             }
         }
 
@@ -116,7 +117,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
         try {
             connection.close();
         } catch (SQLException e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -129,4 +130,9 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
     protected AbstractTMSTileSource getTileSource() {
         return new TMSTileSource(info);
     }
+
+	@Override
+	public Collection<String> getNativeProjections() {
+		return null;
+	}
 }
