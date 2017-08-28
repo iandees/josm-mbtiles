@@ -24,9 +24,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.apache.commons.jcs.access.CacheAccess;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.data.cache.BufferedImageCacheEntry;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.layer.TMSLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
@@ -36,6 +36,7 @@ import org.openstreetmap.josm.gui.preferences.imagery.CacheContentsPanel;
 import org.openstreetmap.josm.gui.widgets.AbstractFileChooser;
 import org.openstreetmap.josm.gui.widgets.ButtonColumn;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 
 
 public class CacheExportPanel implements SubPreferenceSetting {
@@ -90,7 +91,7 @@ public class CacheExportPanel implements SubPreferenceSetting {
             }
             File saveFile = fileDialog.getSelectedFile();
 
-            Main.worker.execute(new ExportTask(cache, layerName, saveFile));
+            MainApplication.worker.execute(new ExportTask(cache, layerName, saveFile));
         }
     }
 
@@ -196,7 +197,7 @@ public class CacheExportPanel implements SubPreferenceSetting {
                 }
                 connection.commit();
                 connection.close();
-                Main.info("MbTiles export took: " + (System.currentTimeMillis() - startTime) + " ms");
+                Logging.info("MbTiles export took: " + (System.currentTimeMillis() - startTime) + " ms");
             } catch (Exception e) {
                 saveFile.delete();			
                 throw new IOException(e);
@@ -205,7 +206,7 @@ public class CacheExportPanel implements SubPreferenceSetting {
                     try {
                         connection.close();
                     } catch (SQLException e) {
-                        Main.trace(e);
+                        Logging.trace(e);
                     }
                 }
             }

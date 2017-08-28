@@ -61,11 +61,6 @@ public class MbtilesTileLoader extends OsmTileLoader {
             }
 
             @Override
-            public Tile getTile() {
-                return tile;
-            }
-
-            @Override
             public void submit() {
                 this.submit(false);
             }

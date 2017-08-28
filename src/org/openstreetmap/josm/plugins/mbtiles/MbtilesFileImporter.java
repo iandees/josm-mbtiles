@@ -7,10 +7,11 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.FileImporter;
+import org.openstreetmap.josm.tools.Logging;
 
 public class MbtilesFileImporter extends FileImporter {
 
@@ -25,10 +26,10 @@ public class MbtilesFileImporter extends FileImporter {
     public void importData(File file, ProgressMonitor progressMonitor) throws IOException {
         try {
             MbtilesLayer layer = new MbtilesLayer(file);
-            Main.getLayerManager().addLayer(layer);
+            MainApplication.getLayerManager().addLayer(layer);
         } catch (MbtilesException e) {
-            Main.error(e);
-            JOptionPane.showMessageDialog(Main.panel, tr("Could not load that mbtiles file: {0}", e.getMessage()));
+            Logging.error(e);
+            JOptionPane.showMessageDialog(MainApplication.getMainPanel(), tr("Could not load that mbtiles file: {0}", e.getMessage()));
         }
     }
 }
