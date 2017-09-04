@@ -10,7 +10,7 @@ deploy:
   file: "dist/mbtiles.jar"
   on:
     tags: true
-    jdk: openjdk8
+    jdk: oraclejdk8
     repo: iandees/josm-mbtiles
 
 matrix:
