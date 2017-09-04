@@ -206,7 +206,7 @@ public class CacheExportPanel implements SubPreferenceSetting {
                     try {
                         connection.close();
                     } catch (SQLException e) {
-                        Logging.trace(e);
+                        Logging.logWithStackTrace(Logging.LEVEL_WARN, "Error closing sqlite database", e);
                     }
                 }
             }

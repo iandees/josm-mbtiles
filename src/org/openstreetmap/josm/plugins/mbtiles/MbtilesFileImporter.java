@@ -5,8 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JOptionPane;
-
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
@@ -28,8 +26,8 @@ public class MbtilesFileImporter extends FileImporter {
             MbtilesLayer layer = new MbtilesLayer(file);
             MainApplication.getLayerManager().addLayer(layer);
         } catch (MbtilesException e) {
-            Logging.error(e);
-            JOptionPane.showMessageDialog(MainApplication.getMainPanel(), tr("Could not load that mbtiles file: {0}", e.getMessage()));
+            Logging.logWithStackTrace(Logging.LEVEL_WARN, "Error importing data", e);
+            throw new IOException(tr("Loading MBTiles failed"), e);
         }
     }
 }

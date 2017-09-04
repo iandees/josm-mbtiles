@@ -93,7 +93,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
                     connection.close();
             } catch (SQLException e) {
                 // connection close failed.
-                Logging.error(e);
+                Logging.logWithStackTrace(Logging.LEVEL_WARN, "Error closing sqlite database", e);
             }
         }
 
@@ -117,7 +117,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
         try {
             connection.close();
         } catch (SQLException e) {
-            Logging.error(e);
+            Logging.logWithStackTrace(Logging.LEVEL_WARN, "Error closing sqlite database", e);
         }
     }
 
