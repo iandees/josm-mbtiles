@@ -34,7 +34,7 @@
             <fileset dir="images"/>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <zipfileset src="lib/sqlite-jdbc-3.8.11.2.jar" includes="**/*"/>
+            <zipfileset src="lib/sqlite-jdbc-3.20.0.jar" includes="**/*"/>
             <manifest>
                 <attribute name="Author" value="${plugin.author}"/>
                 <attribute name="Plugin-Class" value="${plugin.class}"/>
