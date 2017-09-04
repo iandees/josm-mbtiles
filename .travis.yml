@@ -1,10 +1,8 @@
 language: java
 jdk:
 - oraclejdk8
-install:
-  - "curl --silent --output josm-custom.jar https://josm.openstreetmap.de/josm-latest.jar"
-script:
-  - "ant dist"
+- oraclejdk9
+script: ./gradlew build compileMinJosmVersion && cp -T `find build/libs/*.jar | head -1` "build/libs/mbtiles.jar"
 deploy:
   provider: releases
   api_key:
@@ -12,4 +10,10 @@ deploy:
   file: "dist/mbtiles.jar"
   on:
     tags: true
+    jdk: openjdk8
     repo: iandees/josm-mbtiles
+
+matrix:
+  fast_finish: true
+  allow_failures:
+  - jdk: oraclejdk9

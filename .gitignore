@@ -1,5 +1,7 @@
-build
-.settings
+bin/
+build/
 dist/
-josm-custom.jar
-
+.gradle/
+.settings/
+.classpath
+.project

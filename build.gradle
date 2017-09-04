@@ -1,0 +1,82 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://floscher.github.io/gradle-josm-plugin/maven"
+    }
+  }
+  dependencies {
+    classpath 'org.openstreetmap.josm:gradle-plugin:0.1.0'
+  }
+}
+
+apply plugin: 'org.openstreetmap.josm.gradle.plugin'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'java'
+
+configurations {
+  minJosmVersionCompile.extendsFrom(requiredPlugin)
+}
+
+apply from: 'gradle/manifest.gradle'
+
+sourceCompatibility = '1.8'
+version = getVersionName()
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  implementation(name: 'josm', version: project.property('plugin.compile.version'))
+  implementation 'org.xerial:sqlite-jdbc:3.7.2'
+
+  testImplementation (name: 'josm-unittest'){changing=true}
+  testImplementation 'junit:junit:4.12'
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src']
+    }
+    resources {
+      srcDirs = ["$projectDir"]
+      include 'data/**'
+      include 'images/**'
+      include 'README'
+    }
+  }
+  minJosmVersion {
+    java.srcDirs = sourceSets.main.java.srcDirs
+    resources {
+      srcDirs = sourceSets.main.resources.srcDirs
+      includes = sourceSets.main.resources.includes
+    }
+  }
+}
+
+task addMinJosmVersionDependency {
+  doLast {
+    def minJosmVersion = getNextJosmVersion(project.property('plugin.main.version'))
+    if (minJosmVersion == null) {
+      throw new GradleException("Could not determine the minimum required JOSM version from the given version number '" + project.property('plugin.main.version') + "'")
+    }
+    println 'Use JOSM version ' + minJosmVersion + ' for compiling against the minimum required version'
+    configurations.minJosmVersionCompile.dependencies.add(project.getDependencies().create(':josm:'+ minJosmVersion))
+  }
+}
+compileMinJosmVersionJava.dependsOn addMinJosmVersionDependency
+
+josm {
+  debugPort = 4139
+  jarName = 'mbtiles.jar'
+}
+
+eclipse.project.name = 'JOSM-mbtiles'
+eclipseClasspath.dependsOn cleanEclipseClasspath
+eclipseProject.dependsOn cleanEclipseProject
+
+tasks.withType(Javadoc) {
+  failOnError false
+}
