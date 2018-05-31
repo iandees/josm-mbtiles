@@ -1,8 +1,7 @@
 plugins{
-  id 'org.openstreetmap.josm.gradle.plugin' version '0.1.6'
+  id 'org.openstreetmap.josm' version '0.4.6'
 }
 apply plugin: 'eclipse'
-apply plugin: 'idea'
 apply plugin: 'java'
 
 apply from: 'gradle/version-functions.gradle'
@@ -16,9 +15,6 @@ repositories {
 
 dependencies {
   packIntoJar 'org.xerial:sqlite-jdbc:3.20.0'
-
-  testImplementation (name: 'josm-unittest'){changing=true}
-  testImplementation 'junit:junit:4.12'
 }
 
 sourceSets {
@@ -30,14 +26,14 @@ sourceSets {
       srcDirs = ["$projectDir"]
       include 'data/**'
       include 'images/**'
-      include 'README'
+      include 'README.md'
     }
   }
 }
 
+archivesBaseName = 'mbtiles'
 josm {
   debugPort = 4139
-  jarName = 'mbtiles.jar'
 }
 
 eclipse.project.name = 'JOSM-mbtiles'
