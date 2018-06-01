@@ -34,6 +34,9 @@ sourceSets {
 archivesBaseName = 'mbtiles'
 josm {
   debugPort = 4139
+  manifest {
+    oldVersionDownloadLink 12677, "v2.3.3", new URL("https://github.com/iandees/josm-mbtiles/releases/download/v2.3.3/mbtiles.jar")
+  }
 }
 
 eclipse.project.name = 'JOSM-mbtiles'

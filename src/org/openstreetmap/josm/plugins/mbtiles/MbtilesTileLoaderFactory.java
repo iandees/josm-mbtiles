@@ -16,8 +16,7 @@ public class MbtilesTileLoaderFactory implements TileLoaderFactory {
     }
 
     @Override
-    public TileLoader makeTileLoader(TileLoaderListener listener, Map<String, String> headers) {
+    public TileLoader makeTileLoader(TileLoaderListener listener, Map<String, String> headers, long minimumExpiryTime) {
         return new MbtilesTileLoader(listener, this.connection);
     }
-
 }
