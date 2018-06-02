@@ -2,13 +2,15 @@ language: java
 jdk:
 - oraclejdk8
 - oraclejdk9
-script: ./gradlew build compileMinJosmVersion && cp -T `find build/libs/*.jar | head -1` "build/libs/mbtiles.jar"
+script: ./gradlew build compileMinJosmVersion
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
     secure: SVkkBT/z5pXY5ooK8k15AcmgQucNGnS2LNFswKJdwGMCdEaI14BY4i/XL7MIOzBA6YRBNt3yMlqSlAup7u1kl3m/ZqaCm0AEjX99w9Xp6d3orb1ymYkCMPhzdrIQyDj4XJAri6TCpxnGIQ773oxSQx7hzu3AW865lqW1+AryI40=
-  file: "build/libs/mbtiles.jar"
+  file:
+  - "build/dist/mbtiles.jar"
+  - "build/tmp/jar/MANIFEST.MF"
   on:
     tags: true
     jdk: oraclejdk8

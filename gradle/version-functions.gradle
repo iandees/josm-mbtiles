@@ -6,7 +6,7 @@ ext.getVersionName = { ->
   def nullOut = new ByteArrayOutputStream()
   try {
     exec {
-      commandLine 'git', 'describe', '--always', '--dirty'
+      commandLine 'git', 'describe', '--always', '--dirty', '--tags'
       standardOutput = resultStream
       errorOutput = nullOut
     }
