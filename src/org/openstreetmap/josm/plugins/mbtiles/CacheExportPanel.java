@@ -32,7 +32,7 @@ import org.openstreetmap.josm.gui.layer.TMSLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
-import org.openstreetmap.josm.gui.preferences.imagery.CacheContentsPanel;
+import org.openstreetmap.josm.gui.preferences.imagery.CacheSettingsPanel;
 import org.openstreetmap.josm.gui.widgets.AbstractFileChooser;
 import org.openstreetmap.josm.gui.widgets.ButtonColumn;
 import org.openstreetmap.josm.tools.GBC;
@@ -132,7 +132,7 @@ public class CacheExportPanel implements SubPreferenceSetting {
     }
 
     private static DefaultTableModel getTableModel(final CacheAccess<String, BufferedImageCacheEntry> cache) {
-        return new CacheExportPanelTableModel(CacheContentsPanel.getCacheStats(cache), new String[]{tr("Cache name"), tr("Object Count"), tr("Export")});
+        return new CacheExportPanelTableModel(CacheSettingsPanel.getCacheStats(cache), new String[]{tr("Cache name"), tr("Object Count"), tr("Export")});
     }
 
     static class ExportTask extends PleaseWaitRunnable {
