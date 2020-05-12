@@ -1,7 +1,7 @@
 language: java
 jdk:
-- oraclejdk8
-- oraclejdk9
+- openjdk8
+- openjdk9
 script: "./gradlew build compileMinJosmVersion"
 deploy:
   provider: releases
@@ -13,10 +13,10 @@ deploy:
   - "build/tmp/jar/MANIFEST.MF"
   on:
     tags: true
-    jdk: oraclejdk8
+    jdk: openjdk8
     repo: iandees/josm-mbtiles
 
 matrix:
   fast_finish: true
   allow_failures:
-  - jdk: oraclejdk9
+  - jdk: openjdk9
