@@ -5,17 +5,16 @@ jdk:
 script: "./gradlew build compileMinJosmVersion"
 deploy:
   provider: releases
-  skip_cleanup: true
+  skip_cleanup: 'true'
   api_key:
-    secure: gJluNGzozLmKtDH77B/TrzE2sXKPDSCvpjrmuqgk4/hv9Ai4Ccpxvec0+UwbZXvyJw0MZhoLg06kw7vr0ubWp+hmppgi5BDYpnw6FCbJX7n3QcoMBGjI1oAOe6MK63mwLR1dc4RWBMyLZ8wC6Db9IkErsRvH2eemjyOMq8dY9Qc=
+    secure: fjKUUKiFwKCMhHk9FQg4PFvBDBXo+YBbDcXPPgeSfxHj6LQsaGx3OsWEviprDh6JHoQK2DVJE2SOZLKL5nMd6pO4743x2kQrNwL2133TlTNbO4rpkA2WUTryE25GmUEtDnaS00D1pfuyfg/XnosJAizIhoGtP4qMChZ1lvnpR6k=
   file:
-  - "build/dist/mbtiles.jar"
-  - "build/tmp/jar/MANIFEST.MF"
+    - "build/dist/mbtiles.jar"
+    - "build/tmp/jar/MANIFEST.MF"
   on:
     tags: true
     jdk: openjdk8
     repo: iandees/josm-mbtiles
-
 matrix:
   fast_finish: true
   allow_failures:
