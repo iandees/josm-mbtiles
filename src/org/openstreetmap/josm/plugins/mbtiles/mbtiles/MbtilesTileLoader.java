@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.mbtiles;
+package org.openstreetmap.josm.plugins.mbtiles.mbtiles;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

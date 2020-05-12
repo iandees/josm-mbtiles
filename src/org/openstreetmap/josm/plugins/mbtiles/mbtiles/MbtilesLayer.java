@@ -1,10 +1,8 @@
-package org.openstreetmap.josm.plugins.mbtiles;
+package org.openstreetmap.josm.plugins.mbtiles.mbtiles;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +15,8 @@ import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryBounds;
 import org.openstreetmap.josm.data.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.data.imagery.TileLoaderFactory;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
+import org.openstreetmap.josm.plugins.mbtiles.SqliteException;
 import org.openstreetmap.josm.tools.Logging;
-import org.sqlite.SQLiteConfig;
 
 /**
  * Class that displays a slippy map layer. Adapted from SlippyMap plugin for
@@ -31,33 +29,24 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
 
     private final Connection connection;
 
-    public MbtilesLayer(File mbtilesFile) throws MbtilesException {
-        super(buildImageryInfo(mbtilesFile));
-        connection = MbTilesUtils.obtainSqliteDbConnection(mbtilesFile, true);
-        super.tileLoader = new MbtilesTileLoader(this, connection);
+    public MbtilesLayer(Connection mbtilesConnection) throws SqliteException {
+        super(buildImageryInfo(mbtilesConnection));
+        connection = mbtilesConnection;
+        super.tileLoader = new MbtilesTileLoader(this, mbtilesConnection);
     }
 
-    private static ImageryInfo buildImageryInfo(File mbtilesFile) throws MbtilesException {
-
+    private static ImageryInfo buildImageryInfo(Connection mbtilesConnection) throws SqliteException {
+        String name = null;
         try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e1) {
-            throw new MbtilesException("Could not load sqlite driver.", e1);
+            name = mbtilesConnection.getSchema();
+        } catch (SQLException ignored) {
         }
-
-        Connection connection = null;
-
-        String name = mbtilesFile.getName();
         ImageryBounds bounds = null;
         int maxz = 18;
         int minz = -1;
 
         try {
-            SQLiteConfig config = new SQLiteConfig();
-            config.setReadOnly(true);
-            connection = DriverManager.getConnection("jdbc:sqlite:" + mbtilesFile.getAbsolutePath(), config.toProperties());
-
-            PreparedStatement statement = connection.prepareStatement("SELECT name,value FROM metadata");
+            PreparedStatement statement = mbtilesConnection.prepareStatement("SELECT name,value FROM metadata");
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -78,7 +67,7 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
             }
 
             if (maxz == 0 || minz == -1) {
-                statement = connection.prepareStatement("SELECT max(zoom_level) AS max,min(zoom_level) AS min FROM tiles");
+                statement = mbtilesConnection.prepareStatement("SELECT max(zoom_level) AS max,min(zoom_level) AS min FROM tiles");
 
                 rs = statement.executeQuery();
                 rs.next();
@@ -86,11 +75,10 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
                 minz = rs.getInt("min");
             }
         } catch (SQLException e) {
-            throw new MbtilesException(tr("This doesn't appear to be a valid mbtiles database."), e);
+            throw new SqliteException(tr("This doesn't appear to be a valid mbtiles database."), e);
         } finally {
             try {
-                if (connection != null)
-                    connection.close();
+                mbtilesConnection.close();
             } catch (SQLException e) {
                 // connection close failed.
                 Logging.logWithStackTrace(Logging.LEVEL_WARN, "Error closing sqlite database", e);

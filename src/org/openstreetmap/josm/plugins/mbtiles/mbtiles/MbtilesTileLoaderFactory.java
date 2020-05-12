@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.mbtiles;
+package org.openstreetmap.josm.plugins.mbtiles.mbtiles;
 
 import java.sql.Connection;
 import java.util.Map;
