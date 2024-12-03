@@ -33,19 +33,18 @@ public class MobacTileLoader extends OsmTileLoader {
                 try {
                     tile.initLoading();
                     Statement stmt = connection.createStatement();
-                    int invY = (int) Math.pow(2, tile.getZoom()) - 1 - tile.getYtile();
-                    String sql = "SELECT blob FROM tiles WHERE z="+tile.getZoom()+" AND x="+tile.getXtile()+" AND y="+invY+" LIMIT 1";
+                    int mobacZ = 17 - tile.getZoom();
+                    String sql = "SELECT image FROM tiles WHERE z="+mobacZ+" AND x="+tile.getXtile()+" AND y="+tile.getYtile()+" LIMIT 1";
 
                     ResultSet rs = stmt.executeQuery(sql);
 
                     if(rs.next()) {
-                        LOG.fine("Got a row");
                         tile.loadImage(new ByteArrayInputStream(rs.getBytes(1)));
                         tile.setLoaded(true);
                         listener.tileLoadingFinished(tile, true);
                     } else {
-                        LOG.fine("No row found");
-                        tile.setError("No tile found");
+//                        LOG.fine("No row found");
+//                        tile.setError("No tile found");
                         listener.tileLoadingFinished(tile, false);
                     }
                     rs.close();
