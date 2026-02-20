@@ -7,12 +7,12 @@ import java.sql.SQLException;
 
 import org.sqlite.SQLiteConfig;
 
-public class MbTilesUtils {
-	   public static Connection obtainSqliteDbConnection(File dbFile, boolean readOnly) throws MbtilesException {
+public class SqliteUtils {
+	   public static Connection obtainSqliteDbConnection(File dbFile, boolean readOnly) throws SqliteException {
 	        try {
 	            Class.forName("org.sqlite.JDBC");
 	        } catch (ClassNotFoundException e1) {
-	            throw new MbtilesException("Could not load sqlite driver.", e1);
+	            throw new SqliteException("Could not load sqlite driver.", e1);
 	        }
 
 	        Connection connection = null;
@@ -22,7 +22,7 @@ public class MbTilesUtils {
 	            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath(), config.toProperties());
 	            return connection;
 	        } catch (SQLException e) {
-	            throw new MbtilesException("Could not connect to sqlite database.", e);
+	            throw new SqliteException("Could not connect to sqlite database.", e);
 	        }
 	    }
 }

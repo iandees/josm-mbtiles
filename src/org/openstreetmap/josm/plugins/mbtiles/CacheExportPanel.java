@@ -159,7 +159,7 @@ public class CacheExportPanel implements SubPreferenceSetting {
             Connection connection = null;
             try {
                 long startTime = System.currentTimeMillis();
-                connection = MbTilesUtils.obtainSqliteDbConnection(saveFile, false);
+                connection = SqliteUtils.obtainSqliteDbConnection(saveFile, false);
                 connection.setAutoCommit(false);
                 Statement stmt = connection.createStatement();
                 stmt.execute("CREATE TABLE metadata (name text, value text)");
@@ -199,7 +199,7 @@ public class CacheExportPanel implements SubPreferenceSetting {
                 connection.close();
                 Logging.info("MbTiles export took: " + (System.currentTimeMillis() - startTime) + " ms");
             } catch (Exception e) {
-                saveFile.delete();			
+                saveFile.delete();
                 throw new IOException(e);
             } finally {
                 if (connection != null) {
