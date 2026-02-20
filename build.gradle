@@ -1,5 +1,5 @@
 plugins{
-  id 'org.openstreetmap.josm' version '0.4.6'
+  id 'org.openstreetmap.josm' version '0.8.2'
 }
 apply plugin: 'eclipse'
 apply plugin: 'java'
@@ -10,11 +10,11 @@ sourceCompatibility = '1.8'
 version = getVersionName()
 
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
 dependencies {
-  packIntoJar 'org.xerial:sqlite-jdbc:3.20.0'
+  packIntoJar 'org.xerial:sqlite-jdbc:3.49.1.0'
 }
 
 sourceSets {
@@ -31,7 +31,9 @@ sourceSets {
   }
 }
 
-archivesBaseName = 'mbtiles'
+base {
+  archivesName = 'mbtiles'
+}
 josm {
   debugPort = 4139
   manifest {
