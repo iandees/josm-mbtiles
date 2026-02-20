@@ -1,7 +1,7 @@
 josm-mbtiles
 ============
 
-![Travis CI build status](https://img.shields.io/travis/iandees/josm-mbtiles/master.svg?style=flat-square)
+![Build](https://github.com/iandees/josm-mbtiles/actions/workflows/build.yml/badge.svg)
 ![latest release](https://img.shields.io/github/release/iandees/josm-mbtiles.svg?style=flat-square)
 ![download count of latest release](https://img.shields.io/github/downloads/iandees/josm-mbtiles/latest/total.svg?style=flat-square)
 
