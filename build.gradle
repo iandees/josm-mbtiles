@@ -15,18 +15,29 @@ repositories {
 
 dependencies {
   packIntoJar 'org.xerial:sqlite-jdbc:3.49.1.0'
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+test {
+  useJUnitPlatform()
 }
 
 sourceSets {
   main {
     java {
       srcDirs = ['src']
+      exclude 'test/**'
     }
     resources {
       srcDirs = ["$projectDir"]
       include 'data/**'
       include 'images/**'
       include 'README.md'
+    }
+  }
+  test {
+    java {
+      srcDirs = ['src/test/java']
     }
   }
 }
