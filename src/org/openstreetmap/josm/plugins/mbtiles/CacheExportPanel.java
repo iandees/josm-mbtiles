@@ -198,7 +198,7 @@ public class CacheExportPanel implements SubPreferenceSetting {
                 connection.commit();
                 connection.close();
                 Logging.info("MbTiles export took: " + (System.currentTimeMillis() - startTime) + " ms");
-            } catch (Exception | SqliteException e) {
+            } catch (Exception e) {
                 saveFile.delete();
                 throw new IOException(e);
             } finally {

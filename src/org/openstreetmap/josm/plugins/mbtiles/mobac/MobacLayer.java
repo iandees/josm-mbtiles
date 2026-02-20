@@ -2,17 +2,12 @@ package org.openstreetmap.josm.plugins.mbtiles.mobac;
 
 import org.openstreetmap.gui.jmapviewer.FeatureAdapter;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
-import org.openstreetmap.gui.jmapviewer.Tile;
-import org.openstreetmap.gui.jmapviewer.TileXY;
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.TMSTileSource;
-import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.imagery.TileLoaderFactory;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
-import org.openstreetmap.josm.gui.layer.imagery.TileCoordinateConverter;
 import org.openstreetmap.josm.plugins.mbtiles.SqliteException;
-import org.openstreetmap.josm.plugins.mbtiles.mbtiles.MbtilesTileLoader;
 import org.openstreetmap.josm.tools.Logging;
 
 import java.sql.Connection;

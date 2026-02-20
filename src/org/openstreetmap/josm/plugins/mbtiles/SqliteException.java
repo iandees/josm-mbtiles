@@ -1,6 +1,6 @@
 package org.openstreetmap.josm.plugins.mbtiles;
 
-public class SqliteException extends Throwable {
+public class SqliteException extends Exception {
     public SqliteException(String m) {
         super(m);
     }
