@@ -148,6 +148,45 @@ class MbtilesLayerTest {
         });
     }
 
+    /**
+     * Verifies that after reading metadata (as buildImageryInfo does),
+     * the connection is still open and usable for tile queries.
+     * This is a regression test for a bug where buildImageryInfo closed
+     * the connection in a finally block, causing all subsequent tile
+     * loads to fail with "database connection closed".
+     */
+    @Test
+    void connectionRemainsOpenAfterMetadataRead() throws Exception {
+        File dbFile = MbtilesTestUtils.createTestMbtilesDb(
+                "Connection Test", "-74.0,40.0,-73.0,41.0", 2, 14);
+        MbtilesTestUtils.insertTile(dbFile, 5, 10, 20, MbtilesTestUtils.createMinimalPng());
+
+        Connection conn = openReadOnly(dbFile);
+
+        // Phase 1: Read metadata (same queries as buildImageryInfo)
+        PreparedStatement metaStmt = conn.prepareStatement("SELECT name,value FROM metadata");
+        ResultSet metaRs = metaStmt.executeQuery();
+        while (metaRs.next()) {
+            metaRs.getString("name");
+            metaRs.getString("value");
+        }
+        metaRs.close();
+        metaStmt.close();
+
+        // Phase 2: Connection must still be usable for tile queries
+        assertFalse(conn.isClosed(), "Connection should remain open after reading metadata");
+
+        Statement tileStmt = conn.createStatement();
+        ResultSet tileRs = tileStmt.executeQuery(
+                "SELECT tile_data FROM tiles WHERE zoom_level=5 AND tile_column=10 AND tile_row=20 LIMIT 1");
+        assertTrue(tileRs.next(), "Tile query should succeed on the still-open connection");
+        assertNotNull(tileRs.getBytes(1), "Tile data should be readable");
+
+        tileRs.close();
+        tileStmt.close();
+        conn.close();
+    }
+
     private Connection openReadOnly(File dbFile) throws Exception {
         Class.forName("org.sqlite.JDBC");
         SQLiteConfig config = new SQLiteConfig();
