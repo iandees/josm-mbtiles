@@ -76,13 +76,6 @@ public class MbtilesLayer extends AbstractTileSourceLayer {
             }
         } catch (SQLException e) {
             throw new SqliteException(tr("This doesn't appear to be a valid mbtiles database."), e);
-        } finally {
-            try {
-                mbtilesConnection.close();
-            } catch (SQLException e) {
-                // connection close failed.
-                Logging.logWithStackTrace(Logging.LEVEL_WARN, "Error closing sqlite database", e);
-            }
         }
 
         ImageryInfo info = new ImageryInfo(tr("MBTiles: {0}", name));
